@@ -1,7 +1,7 @@
 package bbv.examples.controllers;
 
 import bbv.examples.domain.Book;
-import bbv.examples.services.BooksService;
+import bbv.examples.services.BooksManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,52 +12,52 @@ import java.util.Collection;
 @RequestMapping("/api/books")
 public class BooksController {
 
-  private BooksService booksService;
+  private BooksManager booksManager;
 
-  public BooksController(BooksService booksService) {
-    this.booksService = booksService;
+  public BooksController(BooksManager booksManager) {
+    this.booksManager = booksManager;
   }
 
   @GetMapping
-  public ResponseEntity<Collection<Book>> findAllBooks() {
-    Collection<Book> books = booksService.findAllBooks();
+  public ResponseEntity<Collection<Book>> index() {
+    Collection<Book> booksList = booksManager.findAllBooks();
 
-    return ResponseEntity.ok(books);
+    return ResponseEntity.ok(booksList);
   }
 
   @GetMapping("{bookId}")
   public ResponseEntity<Book> findBookById(@PathVariable("bookId") Integer bookId) {
-    Book book = booksService.findById(bookId);
+    Book book = booksManager.findById(bookId);
 
     return ResponseEntity.ok(book);
   }
 
   @GetMapping("/isbn/{isbn}")
   public ResponseEntity<Book> findByIsbn(@PathVariable("isbn") String isbn) {
-    Book book = booksService.findByIsbn(isbn);
+    Book book = booksManager.findByIsbn(isbn);
 
     return ResponseEntity.ok(book);
   }
 
   @PostMapping
   public ResponseEntity<Book> addBookToLibrary(@RequestBody Book book) {
-    Book persistedBook = booksService.addBookToLibrary(book);
-    URI location = booksService.createBookLocationURI(persistedBook);
+    Book persistedBook = booksManager.addBookToLibrary(book);
+    URI location = booksManager.createBookLocationURI(persistedBook);
 
     return ResponseEntity.created(location).body(book);
   }
 
   @PutMapping("{bookId}")
   public ResponseEntity<Book> updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
-    Book updatedBook = booksService.updateBookDetails(book);
+    Book updatedBook = booksManager.updateBookDetails(book);
 
     return ResponseEntity.ok(updatedBook);
   }
 
   @DeleteMapping("{bookId}")
   public ResponseEntity<Book> removeBookFromLibrary(@PathVariable Integer bookId) {
-    Book book = booksService.findById(bookId);
-    booksService.removeBookFromLibrary(book);
+    Book book = booksManager.findById(bookId);
+    booksManager.removeBookFromLibrary(book);
 
     return ResponseEntity.noContent().build();
   }

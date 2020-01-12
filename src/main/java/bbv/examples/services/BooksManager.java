@@ -10,32 +10,32 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class BooksService {
+public class BooksManager {
 
-  private BooksRepository repository;
+  private BooksRepository r;
 
-  public BooksService(BooksRepository repository) {
-    this.repository = repository;
+  public BooksManager(BooksRepository repository) {
+    this.r = repository;
   }
 
   public Collection<Book> findAllBooks() {
-    return repository.findAll();
+    return r.findAll();
   }
 
   public Book findById(Integer bookId) {
-    return repository.findById(bookId);
+    return r.findById(bookId);
   }
 
   public Book addBookToLibrary(Book book) {
-    return repository.save(book);
+    return r.save(book);
   }
 
   public Book updateBookDetails(Book book) {
-    return repository.save(book);
+    return r.save(book);
   }
 
   public void removeBookFromLibrary(Book book) {
-    repository.delete(book);
+    r.delete(book);
   }
 
   public URI createBookLocationURI(Book book) {
@@ -43,7 +43,7 @@ public class BooksService {
   }
 
   public Book findByIsbn(String isbn) {
-    Optional<Book> result = repository.findAll().stream()
+    Optional<Book> result = r.findAll().stream()
       .filter(book -> isbn.equals(book.getIsbn()))
       .findFirst();
 
