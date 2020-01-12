@@ -11,14 +11,14 @@ import java.util.Map;
 @Repository
 public class BooksRepository {
 
-  private Map<Integer, Book> books = new HashMap<>();
+  private Map<Integer, Book> booksMap = new HashMap<>();
 
   public Collection<Book> findAll() {
-    return books.values();
+    return booksMap.values();
   }
 
   public Book findById(Integer id) {
-    return books.get(id);
+    return booksMap.get(id);
   }
 
   public Book save(Book book) {
@@ -28,11 +28,11 @@ public class BooksRepository {
   private Book add(Book book) {
     Date createdAt = new Date();
 
-    book.setId(books.size() + 1);
+    book.setId(booksMap.size() + 1);
     book.setCreatedAt(createdAt);
     book.setUpdatedAt(createdAt);
 
-    books.put(book.getId(), book);
+    booksMap.put(book.getId(), book);
 
     return book;
   }
@@ -40,12 +40,12 @@ public class BooksRepository {
   private Book update(Book book) {
     book.setUpdatedAt(new Date());
 
-    books.put(book.getId(), book);
+    booksMap.put(book.getId(), book);
 
     return book;
   }
 
   public void delete(Book book) {
-    books.remove(book.getId());
+    booksMap.remove(book.getId());
   }
 }
