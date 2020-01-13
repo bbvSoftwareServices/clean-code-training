@@ -5,7 +5,6 @@ import bbv.examples.exceptions.ServiceException;
 import bbv.examples.repositories.BooksRepository;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -18,31 +17,15 @@ public class BooksManager {
     this.r = repository;
   }
 
-  public Collection<Book> findAllBooks() {
+  public Collection<Book> search() {
     return r.findAll();
   }
 
-  public Book findById(Integer bookId) {
+  public Book retrieveById(Integer bookId) {
     return r.findById(bookId);
   }
 
-  public Book addBookToLibrary(Book book) {
-    return r.save(book);
-  }
-
-  public Book updateBookDetails(Book book) {
-    return r.save(book);
-  }
-
-  public void removeBookFromLibrary(Book book) {
-    r.delete(book);
-  }
-
-  public URI createBookLocationURI(Book book) {
-    return URI.create(String.format("/api/books/%s", book.getId()));
-  }
-
-  public Book findByIsbn(String isbn) {
+  public Book fetchByIsbn(String isbn) {
     Optional<Book> result = r.findAll().stream()
       .filter(book -> isbn.equals(book.getIsbn()))
       .findFirst();
@@ -54,4 +37,17 @@ public class BooksManager {
       throw new ServiceException(ServiceException.EXCEPTION_NOT_FOUND);
     }
   }
+
+  public Book persist(Book book) {
+    return r.save(book);
+  }
+
+  public Book updateBookDetails(Book book) {
+    return r.save(book);
+  }
+
+  public void removeBookFromLibrary(Book book) {
+    r.delete(book);
+  }
+
 }

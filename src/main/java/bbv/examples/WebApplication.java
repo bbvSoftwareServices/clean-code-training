@@ -30,7 +30,7 @@ public class WebApplication {
 			b1.setAdditionalTitle("Fifth Edition");
 			b1.setAuthors(Collections.singletonList("Craig Walls"));
 			b1.setPublisher(manning);
-			service.addBookToLibrary(b1);
+			service.persist(b1);
 
 			Book b2 = new Book();
 			b2.setIsbn("978-0-13-235088-4");
@@ -38,7 +38,7 @@ public class WebApplication {
 			b2.setAdditionalTitle("A Handbook of Agile Software Craftsmanship");
 			b2.setAuthors(Collections.singletonList("Robert C. Martin"));
 			b2.setPublisher(prenticeHall);
-			service.addBookToLibrary(b2);
+			service.persist(b2);
 
 			Book b3 = new Book();
 			b3.setIsbn("978-1-61729-160-9");
@@ -46,7 +46,7 @@ public class WebApplication {
 			b3.setAdditionalTitle("Second Edition");
 			b3.setAuthors(Arrays.asList("Kyle Banker", "Peter Bakkum", "Shaun Verch", "Douglas Garrett", "Tim Hawkins"));
 			b3.setPublisher(manning);
-			service.addBookToLibrary(b3);
+			service.persist(b3);
 		};
 	}
 }
