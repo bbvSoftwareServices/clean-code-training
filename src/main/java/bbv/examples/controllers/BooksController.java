@@ -27,9 +27,9 @@ public class BooksController {
 
   @GetMapping("{bookId}")
   public ResponseEntity<Book> getById(@PathVariable("bookId") Integer bookId) {
-    Book book = manager.retrieveById(bookId);
+    Book buch = manager.retrieveById(bookId);
 
-    return ResponseEntity.ok(book);
+    return ResponseEntity.ok(buch);
   }
 
   @GetMapping("/isbn/{isbn}")
