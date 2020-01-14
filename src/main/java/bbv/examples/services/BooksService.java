@@ -7,6 +7,10 @@ import java.util.Collection;
 
 public interface BooksService {
 
+  /**
+   * Извлекает все книги из библиотеки.
+   * @return коллекция книг
+   */
   Collection<Book> findAllBooks();
 
   Book findById(Integer bookId);
