@@ -26,6 +26,19 @@ public class BooksService {
     return repository.findById(bookId);
   }
 
+  public Book findByIsbn(String isbn) {
+    Optional<Book> result = repository.findAll().stream()
+      .filter(book -> isbn.equals(book.getIsbn()))
+      .findFirst();
+
+    if (result.isPresent()) {
+      return result.get();
+    }
+    else {
+      throw new ServiceException(ServiceException.EXCEPTION_NOT_FOUND);
+    }
+  }
+
   public Book addBookToLibrary(Book book) {
     return repository.save(book);
   }
@@ -40,18 +53,5 @@ public class BooksService {
 
   public URI createBookLocationURI(Book book) {
     return URI.create(String.format("/api/books/%s", book.getId()));
-  }
-
-  public Book findByIsbn(String isbn) {
-    Optional<Book> result = repository.findAll().stream()
-      .filter(book -> isbn.equals(book.getIsbn()))
-      .findFirst();
-
-    if (result.isPresent()) {
-      return result.get();
-    }
-    else {
-      throw new ServiceException(ServiceException.EXCEPTION_NOT_FOUND);
-    }
   }
 }
