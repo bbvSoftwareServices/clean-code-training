@@ -1,6 +1,7 @@
 package bbv.examples.repositories;
 
 import bbv.examples.domain.Book;
+import bbv.examples.exceptions.RepositoryException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -26,6 +27,8 @@ public class BooksRepository {
   }
 
   private Book add(Book book) {
+    validateExistence(book);
+
     Date createdAt = new Date();
 
     book.setId(books.size() + 1);
@@ -35,6 +38,12 @@ public class BooksRepository {
     books.put(book.getId(), book);
 
     return book;
+  }
+
+  private void validateExistence(Book book) {
+    findAll().stream().filter(b -> b.getIsbn().equals(book.getIsbn())).findFirst().ifPresent((b) -> {
+      throw RepositoryException.bookAlreadyExists();
+    });
   }
 
   private Book update(Book book) {
