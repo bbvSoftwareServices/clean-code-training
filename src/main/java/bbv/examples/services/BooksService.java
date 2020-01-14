@@ -1,57 +1,23 @@
 package bbv.examples.services;
 
 import bbv.examples.domain.Book;
-import bbv.examples.exceptions.ServiceException;
-import bbv.examples.repositories.BooksRepository;
-import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Optional;
 
-@Service
-public class BooksService {
+public interface BooksService {
 
-  private BooksRepository repository;
+  Collection<Book> findAllBooks();
 
-  public BooksService(BooksRepository repository) {
-    this.repository = repository;
-  }
+  Book findById(Integer bookId);
 
-  public Collection<Book> findAllBooks() {
-    return repository.findAll();
-  }
+  Book findByIsbn(String isbn);
 
-  public Book findById(Integer bookId) {
-    return repository.findById(bookId);
-  }
+  Book addBookToLibrary(Book book);
 
-  public Book addBookToLibrary(Book book) {
-    return repository.save(book);
-  }
+  Book updateBookDetails(Book book);
 
-  public Book updateBookDetails(Book book) {
-    return repository.save(book);
-  }
+  void removeBookFromLibrary(Book book);
 
-  public void removeBookFromLibrary(Book book) {
-    repository.delete(book);
-  }
-
-  public URI createBookLocationURI(Book book) {
-    return URI.create(String.format("/api/books/%s", book.getId()));
-  }
-
-  public Book findByIsbn(String isbn) {
-    Optional<Book> result = repository.findAll().stream()
-      .filter(book -> isbn.equals(book.getIsbn()))
-      .findFirst();
-
-    if (result.isPresent()) {
-      return result.get();
-    }
-    else {
-      throw new ServiceException(ServiceException.EXCEPTION_NOT_FOUND);
-    }
-  }
+  URI createBookLocationURI(Book book);
 }

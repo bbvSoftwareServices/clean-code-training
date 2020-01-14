@@ -2,6 +2,7 @@ package bbv.examples.controllers;
 
 import bbv.examples.domain.Book;
 import bbv.examples.services.BooksService;
+import bbv.examples.services.BooksServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
