@@ -21,11 +21,7 @@ public class BooksRepository {
     return books.get(id);
   }
 
-  public Book save(Book book) {
-    return book.getId() != null ? this.update(book) : this.add(book);
-  }
-
-  private Book add(Book book) {
+  public Book add(Book book) {
     Date createdAt = new Date();
 
     book.setId(books.size() + 1);
@@ -37,7 +33,7 @@ public class BooksRepository {
     return book;
   }
 
-  private Book update(Book book) {
+  public Book update(Book book) {
     book.setUpdatedAt(new Date());
 
     books.put(book.getId(), book);

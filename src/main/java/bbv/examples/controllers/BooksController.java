@@ -1,64 +1,86 @@
 package bbv.examples.controllers;
 
 import bbv.examples.domain.Book;
-import bbv.examples.services.BooksService;
+import bbv.examples.exceptions.ServiceException;
+import bbv.examples.repositories.BooksRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books")
 public class BooksController {
 
-  private BooksService booksService;
+  private BooksRepository booksRepository;
 
-  public BooksController(BooksService booksService) {
-    this.booksService = booksService;
+  public BooksController(BooksRepository booksRepository) {
+    this.booksRepository = booksRepository;
   }
 
   @GetMapping
-  public ResponseEntity<Collection<Book>> findAllBooks() {
-    Collection<Book> books = booksService.findAllBooks();
-
-    return ResponseEntity.ok(books);
+  public Collection<Book> getAllBooks() {
+    return booksRepository.findAll();
   }
 
   @GetMapping("{bookId}")
-  public ResponseEntity<Book> findBookById(@PathVariable("bookId") Integer bookId) {
-    Book book = booksService.findById(bookId);
+  public ResponseEntity<Book> retrieveBook(@PathVariable("bookId") Integer bookId) {
+    Book book = booksRepository.findById(bookId);
 
     return ResponseEntity.ok(book);
   }
 
   @GetMapping("/isbn/{isbn}")
-  public ResponseEntity<Book> findByIsbn(@PathVariable("isbn") String isbn) {
-    Book book = booksService.findByIsbn(isbn);
+  public Book fetchByIsbn(@PathVariable("isbn") String isbn) {
+    Book book = findByIsbn(isbn);
 
-    return ResponseEntity.ok(book);
+    if (book != null) {
+      return book;
+    }
+    else {
+      return null;
+    }
   }
 
   @PostMapping
-  public ResponseEntity<Book> addBookToLibrary(@RequestBody Book book) {
-    Book persistedBook = booksService.addBookToLibrary(book);
-    URI location = booksService.createBookLocationURI(persistedBook);
+  public ResponseEntity<Book> post(@RequestBody Book book) {
+    Book persistedBook = booksRepository.add(book);
+    String path = String.format("/api/books/%s", persistedBook.getId());
+    URI location = URI.create(path);
 
     return ResponseEntity.created(location).body(book);
   }
 
   @PutMapping("{bookId}")
-  public ResponseEntity<Book> updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
-    Book updatedBook = booksService.updateBookDetails(book);
+  public ResponseEntity<Book> put(@PathVariable Integer bookId, @RequestBody Book book) {
+    Book updatedBook = booksRepository.update(book);
 
     return ResponseEntity.ok(updatedBook);
   }
 
   @DeleteMapping("{bookId}")
-  public ResponseEntity<Book> removeBookFromLibrary(@PathVariable Integer bookId) {
-    Book book = booksService.findById(bookId);
-    booksService.removeBookFromLibrary(book);
+  public void removeBookFromLibrary(@PathVariable Integer bookId) {
+    Book book = booksRepository.findById(bookId);
+    booksRepository.delete(book);
+  }
 
-    return ResponseEntity.noContent().build();
+  public Book findByIsbn(String isbn) {
+    if (isbn == null) {
+      return null;
+    }
+
+    Collection<Book> books = booksRepository.findAll();
+    Book a = null;
+
+    for (Book book : books) {
+      if (book.getIsbn().equals(isbn)) {
+        a = book;
+        break;
+      }
+    }
+
+    return a;
   }
 }
