@@ -36,13 +36,12 @@ public class BooksServiceImpl implements BooksService {
         .equals(book.getIsbn()))
       .findFirst();
 
-    if (result.isPresent()) {
+    if (result.isPresent())
       return result.get();
-    }
-    else {
+
+    else
       throw new ServiceException(
         ServiceException.EXCEPTION_NOT_FOUND);
-    }
   } // end of findByIsbn
 
 //  public Collection<Book> findByPublisher(Publisher publisher) {
