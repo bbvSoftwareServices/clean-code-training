@@ -13,6 +13,9 @@ import java.util.Collection;
 @RequestMapping("/api/books")
 public class BooksController {
 
+  /**
+   * Books service.
+   */
   private BooksService booksService;
 
   /**
@@ -44,20 +47,26 @@ public class BooksController {
     return ResponseEntity.ok(book);
   }
 
+  /**
+   * Retrieves all the books of given publisher.
+   * @param publisher searched publisher
+   * @return collection of books
+   */
+
   @PostMapping
   public ResponseEntity<Book> addBookToLibrary(@RequestBody Book book) {
     Book persistedBook = booksService.addBookToLibrary(book);
     URI location = booksService.createBookLocationURI(persistedBook);
 
     return ResponseEntity.created(location).body(book);
-  }
+  } // end of addBookToLibrary
 
   @PutMapping("{bookId}")
   public ResponseEntity<Book> updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
     Book updatedBook = booksService.updateBookDetails(book);
 
     return ResponseEntity.ok(updatedBook);
-  }
+  } // end of updateBookDetails
 
   @DeleteMapping("{bookId}")
   public ResponseEntity<Book> removeBookFromLibrary(@PathVariable Integer bookId) {
