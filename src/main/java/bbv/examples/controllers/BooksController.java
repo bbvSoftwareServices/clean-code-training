@@ -15,6 +15,10 @@ public class BooksController {
 
   private BooksService booksService;
 
+  /**
+   * Constructor of books controller.
+   * @param booksService service of books
+   */
   public BooksController(BooksService booksService) {
     this.booksService = booksService;
   }
