@@ -17,7 +17,6 @@ public class BooksController {
    * Books service.
    */
   private BooksService booksService;
-
   /**
    * Constructor of books controller.
    * @param booksService service of books
@@ -70,6 +69,7 @@ public class BooksController {
 
   @DeleteMapping("{bookId}")
   public ResponseEntity<Book> removeBookFromLibrary(@PathVariable Integer bookId) {
+    // TODO: implement
     Book book = booksService.findById(bookId);
     booksService.removeBookFromLibrary(book);
 
