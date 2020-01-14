@@ -2,16 +2,18 @@ package bbv.examples.repositories;
 
 import bbv.examples.domain.Book;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class BooksRepository {
 
-  private Map<Integer, Book> books = new HashMap<>();
+public class BooksRepository {
+      private Map<Integer, Book> books = new HashMap<>();
 
   public Collection<Book> findAll() {
     return books.values();
@@ -26,15 +28,16 @@ public class BooksRepository {
   }
 
   private Book add(Book book) {
-    Date createdAt = new Date();
+      Date createdAt = new Date();
 
-    book.setId(books.size() + 1);
-    book.setCreatedAt(createdAt);
-    book.setUpdatedAt(createdAt);
+      book.setId(books.size() + 1);
+      book.setCreatedAt(createdAt);
+      book.setUpdatedAt(createdAt);
 
-    books.put(book.getId(), book);
+      books.put(book.getId(),
+        book);
 
-    return book;
+      return book;
   }
 
   private Book update(Book book) {

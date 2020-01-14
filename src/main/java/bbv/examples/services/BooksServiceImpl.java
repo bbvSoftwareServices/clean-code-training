@@ -30,15 +30,18 @@ public class BooksServiceImpl implements BooksService {
   }
 
   public Book findByIsbn(String isbn) {
-    Optional<Book> result = repository.findAll().stream()
-      .filter(book -> isbn.equals(book.getIsbn()))
+    Optional<Book> result = repository
+      .findAll().stream()
+      .filter(book -> isbn
+        .equals(book.getIsbn()))
       .findFirst();
 
     if (result.isPresent()) {
       return result.get();
     }
     else {
-      throw new ServiceException(ServiceException.EXCEPTION_NOT_FOUND);
+      throw new ServiceException(
+        ServiceException.EXCEPTION_NOT_FOUND);
     }
   } // end of findByIsbn
 
@@ -61,6 +64,8 @@ public class BooksServiceImpl implements BooksService {
   }
 
   public Book updateBookDetails(Book book) {
+    Publisher publisher;
+
     return repository.save(book);
   }
 
