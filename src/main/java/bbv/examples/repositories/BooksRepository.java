@@ -41,9 +41,13 @@ public class BooksRepository {
   }
 
   private void validateExistence(Book book) {
-    findAll().stream().filter(b -> b.getIsbn().equals(book.getIsbn())).findFirst().ifPresent((b) -> {
-      throw RepositoryException.bookAlreadyExists();
-    });
+    findAll()
+      .stream()
+      .filter(b -> b.getIsbn().equals(book.getIsbn()))
+      .findFirst()
+      .ifPresent((b) -> {
+        throw RepositoryException.bookAlreadyExists();
+      });
   }
 
   private Book update(Book book) {
