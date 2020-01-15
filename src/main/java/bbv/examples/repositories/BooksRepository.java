@@ -19,7 +19,12 @@ public class BooksRepository {
   }
 
   public Book findById(Integer id) {
-    return books.get(id);
+    if (books.containsKey(id)) {
+      return books.get(id);
+    }
+    else {
+      throw RepositoryException.entryNotFound();
+    }
   }
 
   public Book save(Book book) {

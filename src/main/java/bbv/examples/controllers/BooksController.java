@@ -47,13 +47,6 @@ public class BooksController {
     return ResponseEntity.created(location).body(book);
   }
 
-  @PutMapping("{bookId}")
-  public ResponseEntity<Book> updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
-    Book updatedBook = booksService.updateBookDetails(book);
-
-    return ResponseEntity.ok(updatedBook);
-  }
-
   @DeleteMapping("{bookId}")
   public ResponseEntity<Book> removeBookFromLibrary(@PathVariable Integer bookId) {
     Book book = booksService.findById(bookId);
