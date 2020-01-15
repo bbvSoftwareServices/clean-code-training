@@ -41,10 +41,19 @@ public class BooksController {
 
   @PostMapping
   public ResponseEntity<Book> addBookToLibrary(@RequestBody Book book) {
+    booksService.validateBookDetails(book);
     Book persistedBook = booksService.addBookToLibrary(book);
     URI location = booksService.createBookLocationURI(persistedBook);
 
     return ResponseEntity.created(location).body(book);
+  }
+
+  @PutMapping("{bookId}")
+  public ResponseEntity<Book> updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
+    booksService.validateBookDetails(book);
+    Book updatedBook = booksService.updateBookDetails(bookId, book);
+
+    return ResponseEntity.ok(updatedBook);
   }
 
   @DeleteMapping("{bookId}")
