@@ -5,7 +5,6 @@ import bbv.examples.services.BooksService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.Collection;
 
 @RestController
@@ -40,20 +39,24 @@ public class BooksController {
   }
 
   @PostMapping
-  public ResponseEntity<Book> addBookToLibrary(@RequestBody Book book) {
-    booksService.validateBookDetails(book);
-    Book persistedBook = booksService.addBookToLibrary(book);
-    URI location = booksService.createBookLocationURI(persistedBook);
-
-    return ResponseEntity.created(location).body(book);
+  public Book addBookToLibrary(@RequestBody Book book) {
+    if (booksService.check(book)) {
+      booksService.addBookToLibrary(book);
+      return book;
+    }
+    else {
+      return null;
+    }
   }
 
   @PutMapping("{bookId}")
-  public ResponseEntity<Book> updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
-    booksService.validateBookDetails(book);
-    Book updatedBook = booksService.updateBookDetails(bookId, book);
-
-    return ResponseEntity.ok(updatedBook);
+  public Book updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
+    if (booksService.check(book)) {
+      return booksService.updateBookDetails(bookId, book);
+    }
+    else {
+      return null;
+    }
   }
 
   @DeleteMapping("{bookId}")

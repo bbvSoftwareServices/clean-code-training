@@ -1,15 +1,14 @@
 package bbv.examples.services;
 
 import bbv.examples.domain.Book;
-import bbv.examples.exceptions.ServiceException;
-import bbv.examples.exceptions.ValidationException;
+import bbv.examples.domain.Publisher;
 import bbv.examples.repositories.BooksRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class BooksService {
@@ -29,20 +28,21 @@ public class BooksService {
   }
 
   public Book findByIsbn(String isbn) {
-    Optional<Book> result = repository.findAll().stream()
-      .filter(book -> isbn.equals(book.getIsbn()))
-      .findFirst();
+    Book book = null;
+    Collection<Book> books = repository.findAll();
 
-    if (result.isPresent()) {
-      return result.get();
+    for (Book b : books) {
+      if (b.getIsbn().equals(isbn)) {
+        book = b;
+        break;
+      }
     }
-    else {
-      throw new ServiceException(ServiceException.EXCEPTION_NOT_FOUND);
-    }
+
+    return book;
   }
 
-  public Book addBookToLibrary(Book book) {
-    return repository.save(book);
+  public void addBookToLibrary(Book book) {
+    repository.save(book);
   }
 
   public Book updateBookDetails(Integer bookId, Book book) {
@@ -64,16 +64,35 @@ public class BooksService {
     repository.delete(book);
   }
 
-  public URI createBookLocationURI(Book book) {
-    return URI.create(String.format("/api/books/%s", book.getId()));
+  public boolean check(Book book) {
+    boolean ok = true;
+
+    if (StringUtils.isEmpty(book.getTitle())) {
+      ok = false;
+    }
+
+    if (StringUtils.isEmpty(book.getIsbn())) {
+      ok = false;
+    }
+
+    return ok;
   }
 
-  public void validateBookDetails(Book book) {
-    if (StringUtils.isEmpty(book.getTitle())) {
-      throw ValidationException.bookTitleIsMandatory();
+  public Collection<Book> findAllBooksForPublisher(Publisher publisher) {
+    List<Book> books = null;
+
+    Collection<Book> allBooks = repository.findAll();
+
+    if (!allBooks.isEmpty()) {
+      books = new LinkedList<>();
+
+      for (Book book : allBooks) {
+        if (book.getPublisher().equals(publisher)) {
+          books.add(book);
+        }
+      }
     }
-    if (StringUtils.isEmpty(book.getIsbn())) {
-      throw ValidationException.isbnIsMandatory();
-    }
+
+    return books;
   }
 }
