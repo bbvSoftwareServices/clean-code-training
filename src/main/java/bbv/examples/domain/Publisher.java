@@ -1,29 +1,45 @@
 package bbv.examples.domain;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class Publisher {
 
   private UUID id;
   private String name;
+  private Date createdAt;
 
   public static Publisher create(String name) {
-    return new Publisher(name);
+    Publisher publisher = new Publisher();
+    publisher.setName(name);
+
+    return publisher;
   }
 
-  private Publisher() {
+  public Publisher() {
   }
 
-  private Publisher(String name) {
-    this.id = UUID.randomUUID();
-    this.name = name;
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
   }
 
   public String getName() {
     return name;
   }
 
-  public UUID getId() {
-    return id;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 }
