@@ -1,35 +1,29 @@
-package bbv.examples.services;
+package bbv.examples.app;
 
-import bbv.examples.domain.Book;
-import bbv.examples.exceptions.ServiceException;
-import bbv.examples.exceptions.ValidationException;
-import bbv.examples.repositories.BooksRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
-public class BooksService {
+public class Services {
 
-  private BooksRepository repository;
-
-  public BooksService(BooksRepository repository) {
-    this.repository = repository;
-  }
+  private Items items;
 
   public Collection<Book> findAllBooks() {
-    return repository.findAll();
+    return items.findAllBooks();
   }
 
-  public Book findById(Integer bookId) {
-    return repository.findById(bookId);
+  public Book findBookById(Integer bookId) {
+    return items.findBookById(bookId);
   }
 
   public Book findByIsbn(String isbn) {
-    Optional<Book> result = repository.findAll().stream()
+    Optional<Book> result = items.findAllBooks().stream()
       .filter(book -> isbn.equals(book.getIsbn()))
       .findFirst();
 
@@ -42,26 +36,29 @@ public class BooksService {
   }
 
   public Book addBookToLibrary(Book book) {
-    return repository.save(book);
+    return items.saveBook(book);
   }
 
   public Book updateBookDetails(Integer bookId, Book book) {
-    Book persistedBook = repository.findById(bookId);
+    Book persistedBook = items.findBookById(bookId);
 
     persistedBook.setTitle(book.getTitle());
     persistedBook.setAdditionalTitle(book.getAdditionalTitle());
     persistedBook.setDescription(book.getDescription());
-    persistedBook.getAuthors().clear();
-    persistedBook.getAuthors().addAll(book.getAuthors());
-    persistedBook.getTags().clear();
-    persistedBook.getTags().addAll(book.getTags());
+    persistedBook.setAuthors(book.getAuthors());
+    persistedBook.setTags(book.getTags());
     persistedBook.setPublisher(book.getPublisher());
 
-    return repository.save(book);
+    return items.saveBook(book);
   }
 
   public void removeBookFromLibrary(Book book) {
-    repository.delete(book);
+    items.deleteBook(book);
+  }
+
+  @Autowired
+  public void setItems(Items items) {
+    this.items = items;
   }
 
   public URI createBookLocationURI(Book book) {
@@ -75,5 +72,17 @@ public class BooksService {
     if (StringUtils.isEmpty(book.getIsbn())) {
       throw ValidationException.isbnIsMandatory();
     }
+  }
+
+  public Collection<Publisher> findAllPublishers() {
+    return items.findAll();
+  }
+
+  public Optional<Publisher> findPublisherById(UUID publisherId) {
+    return items.findById(publisherId);
+  }
+
+  public Publisher addPublisher(Publisher publisher) {
+    return items.save(publisher);
   }
 }

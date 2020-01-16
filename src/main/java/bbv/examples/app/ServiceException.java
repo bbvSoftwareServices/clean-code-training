@@ -1,4 +1,4 @@
-package bbv.examples.exceptions;
+package bbv.examples.app;
 
 public class ServiceException extends RuntimeException {
 

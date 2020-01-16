@@ -1,9 +1,9 @@
-package bbv.examples.exceptions;
+package bbv.examples.app;
 
 public class ValidationException extends RuntimeException {
 
-  public static final String MANDATORY_BOOK_TITLE = "Book title can not be empty or null";
-  public static final String MANDATORY_ISBN = "ISBN is mandatory";
+  private static final String MANDATORY_BOOK_TITLE = "Book title can not be empty or null";
+  private static final String MANDATORY_ISBN = "ISBN is mandatory";
 
   public ValidationException(String message) {
     super(message);

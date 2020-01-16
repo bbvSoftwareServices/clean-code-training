@@ -1,4 +1,4 @@
-package bbv.examples.domain;
+package bbv.examples.app;
 
 import java.util.Date;
 import java.util.UUID;

@@ -1,24 +1,19 @@
-package bbv.examples.repositories;
+package bbv.examples.app;
 
-import bbv.examples.domain.Book;
-import bbv.examples.exceptions.RepositoryException;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Repository
-public class BooksRepository {
+public class Items {
 
   private Map<Integer, Book> books = new HashMap<>();
 
-  public Collection<Book> findAll() {
+  public Collection<Book> findAllBooks() {
     return books.values();
   }
 
-  public Book findById(Integer id) {
+  public Book findBookById(Integer id) {
     if (books.containsKey(id)) {
       return books.get(id);
     }
@@ -27,7 +22,7 @@ public class BooksRepository {
     }
   }
 
-  public Book save(Book book) {
+  public Book saveBook(Book book) {
     return book.getId() != null ? this.update(book) : this.add(book);
   }
 
@@ -46,13 +41,32 @@ public class BooksRepository {
   }
 
   private void validateExistence(Book book) {
-    findAll()
+    findAllBooks()
       .stream()
       .filter(b -> b.getIsbn().equals(book.getIsbn()))
       .findFirst()
       .ifPresent((b) -> {
         throw RepositoryException.bookAlreadyExists();
       });
+  }
+
+  private Map<UUID, Publisher> publishers = new HashMap<>();
+
+  public Collection<Publisher> findAll() {
+    return publishers.values();
+  }
+
+  public Publisher save(Publisher publisher) {
+    publisher.setId(UUID.randomUUID());
+    publisher.setCreatedAt(new Date());
+
+    publishers.put(publisher.getId(), publisher);
+
+    return publisher;
+  }
+
+  public Optional<Publisher> findById(UUID publisherId) {
+    return Optional.ofNullable(publishers.get(publisherId));
   }
 
   private Book update(Book book) {
@@ -63,7 +77,7 @@ public class BooksRepository {
     return book;
   }
 
-  public void delete(Book book) {
+  public void deleteBook(Book book) {
     books.remove(book.getId());
   }
 }

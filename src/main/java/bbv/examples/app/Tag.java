@@ -1,4 +1,4 @@
-package bbv.examples.domain;
+package bbv.examples.app;
 
 public class Tag {
 
