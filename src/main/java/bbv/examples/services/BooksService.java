@@ -2,6 +2,7 @@ package bbv.examples.services;
 
 import bbv.examples.domain.Book;
 import bbv.examples.domain.Publisher;
+import bbv.examples.exceptions.RepositoryException;
 import bbv.examples.repositories.BooksRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,8 +24,13 @@ public class BooksService {
     return repository.findAll();
   }
 
-  public Book findById(Integer bookId) {
-    return repository.findById(bookId);
+  public Book findById(Integer bookId) throws Exception {
+    try {
+      return repository.findById(bookId);
+    }
+    catch (RepositoryException e) {
+      throw new Exception(e);
+    }
   }
 
   public Book findByIsbn(String isbn) {
@@ -41,23 +47,30 @@ public class BooksService {
     return book;
   }
 
-  public void addBookToLibrary(Book book) {
+  public void addBookToLibrary(Book book) throws RepositoryException {
     repository.save(book);
   }
 
-  public Book updateBookDetails(Integer bookId, Book book) {
-    Book persistedBook = repository.findById(bookId);
+  public Book updateBookDetails(Integer bookId, Book book) throws Exception {
+    Book persistedBook = null;
 
-    persistedBook.setTitle(book.getTitle());
-    persistedBook.setAdditionalTitle(book.getAdditionalTitle());
-    persistedBook.setDescription(book.getDescription());
-    persistedBook.getAuthors().clear();
-    persistedBook.getAuthors().addAll(book.getAuthors());
-    persistedBook.getTags().clear();
-    persistedBook.getTags().addAll(book.getTags());
-    persistedBook.setPublisher(book.getPublisher());
+    try {
+      persistedBook = repository.findById(bookId);
 
-    return repository.save(book);
+      persistedBook.setTitle(book.getTitle());
+      persistedBook.setAdditionalTitle(book.getAdditionalTitle());
+      persistedBook.setDescription(book.getDescription());
+      persistedBook.getAuthors().clear();
+      persistedBook.getAuthors().addAll(book.getAuthors());
+      persistedBook.getTags().clear();
+      persistedBook.getTags().addAll(book.getTags());
+      persistedBook.setPublisher(book.getPublisher());
+
+      return repository.save(book);
+    }
+    catch (RepositoryException e) {
+      throw new Exception("something went wrong", e);
+    }
   }
 
   public void removeBookFromLibrary(Book book) {

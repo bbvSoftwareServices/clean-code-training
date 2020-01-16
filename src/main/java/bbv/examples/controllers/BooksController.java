@@ -1,6 +1,7 @@
 package bbv.examples.controllers;
 
 import bbv.examples.domain.Book;
+import bbv.examples.exceptions.RepositoryException;
 import bbv.examples.services.BooksService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class BooksController {
   }
 
   @GetMapping("{bookId}")
-  public ResponseEntity<Book> findBookById(@PathVariable("bookId") Integer bookId) {
+  public ResponseEntity<Book> findBookById(@PathVariable("bookId") Integer bookId) throws Exception {
     Book book = booksService.findById(bookId);
 
     return ResponseEntity.ok(book);
@@ -40,17 +41,24 @@ public class BooksController {
 
   @PostMapping
   public Book addBookToLibrary(@RequestBody Book book) {
-    if (booksService.check(book)) {
-      booksService.addBookToLibrary(book);
-      return book;
+    try {
+      if (booksService.check(book)) {
+        booksService.addBookToLibrary(book);
+        return book;
+      }
+      else {
+        return null;
+      }
     }
-    else {
-      return null;
+    catch (RepositoryException e) {
+      // shouldn't happen
     }
+
+    return null;
   }
 
   @PutMapping("{bookId}")
-  public Book updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) {
+  public Book updateBookDetails(@PathVariable Integer bookId, @RequestBody Book book) throws Exception {
     if (booksService.check(book)) {
       return booksService.updateBookDetails(bookId, book);
     }
@@ -60,10 +68,13 @@ public class BooksController {
   }
 
   @DeleteMapping("{bookId}")
-  public ResponseEntity<Book> removeBookFromLibrary(@PathVariable Integer bookId) {
-    Book book = booksService.findById(bookId);
-    booksService.removeBookFromLibrary(book);
-
-    return ResponseEntity.noContent().build();
+  public void removeBookFromLibrary(@PathVariable Integer bookId) {
+    try {
+      Book book = booksService.findById(bookId);
+      booksService.removeBookFromLibrary(book);
+    }
+    catch (Exception e) {
+      // ignore
+    }
   }
 }

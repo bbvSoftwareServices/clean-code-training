@@ -1,6 +1,6 @@
 package bbv.examples.exceptions;
 
-public class RepositoryException extends RuntimeException {
+public class RepositoryException extends Exception {
 
   private static final String BOOK_ALREADY_EXISTS = "A book with given ISBN already exists";
   private static final String BOOK_NO_ENTRY_FOUND = "No entry found";

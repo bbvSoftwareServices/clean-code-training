@@ -2,6 +2,7 @@ package bbv.examples.repositories;
 
 import bbv.examples.domain.Book;
 import bbv.examples.exceptions.RepositoryException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
+@Slf4j
 public class BooksRepository {
 
   private Map<Integer, Book> books = new HashMap<>();
@@ -18,7 +20,7 @@ public class BooksRepository {
     return books.values();
   }
 
-  public Book findById(Integer id) {
+  public Book findById(Integer id) throws RepositoryException {
     if (books.containsKey(id)) {
       return books.get(id);
     }
@@ -27,11 +29,11 @@ public class BooksRepository {
     }
   }
 
-  public Book save(Book book) {
+  public Book save(Book book) throws RepositoryException {
     return book.getId() != null ? this.update(book) : this.add(book);
   }
 
-  private Book add(Book book) {
+  private Book add(Book book) throws RepositoryException {
     validateExistence(book);
 
     Date createdAt = new Date();
@@ -45,14 +47,12 @@ public class BooksRepository {
     return book;
   }
 
-  private void validateExistence(Book book) {
-    findAll()
-      .stream()
-      .filter(b -> b.getIsbn().equals(book.getIsbn()))
-      .findFirst()
-      .ifPresent((b) -> {
+  private void validateExistence(Book book) throws RepositoryException {
+    for (Book b : findAll()) {
+      if (b.getIsbn().equals(book.getIsbn())) {
         throw RepositoryException.bookAlreadyExists();
-      });
+      }
+    }
   }
 
   private Book update(Book book) {
